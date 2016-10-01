@@ -1,0 +1,3 @@
+the main game engine in here, really this folder should just contain 
+the class that provides the game loop. 
+Any extra helper classes should be put in a new folder called "tools".

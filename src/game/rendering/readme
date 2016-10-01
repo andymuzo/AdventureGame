@@ -1,0 +1,4 @@
+Any classes used for rendering the game go in here. When rendering is required the
+game board should be passed to a class in here and ALL classes and methods relating
+to how the game is shown to the user should be here, entirely seperate from the game
+logic.

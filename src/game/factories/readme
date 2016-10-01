@@ -1,0 +1,4 @@
+A factory is a class whose function is to take requests and deliver objects 
+based on those requests. In here will be a main room creator factory that 
+will be called by the game engine but also helper factories for creating 
+enemies and items.
