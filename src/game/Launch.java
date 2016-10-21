@@ -1,5 +1,7 @@
 package game;
 
+import game.engine.GameEngine;
+
 public class Launch {
 
 	public static void main(String[] args) {
@@ -10,6 +12,9 @@ public class Launch {
 		// as we progress it will launch options and menus instead
 		
 		// ***Launch Program Here***
+		System.out.println("start of game");
+		new GameEngine();
+		System.out.println("exiting game");
 	}
 
 }
