@@ -12,6 +12,7 @@ public class Launch {
 		// as we progress it will launch options and menus instead
 		
 		// ***Launch Program Here***
+		// TODO: Remove debug println
 		System.out.println("start of game");
 		new GameEngine();
 		System.out.println("exiting game");
