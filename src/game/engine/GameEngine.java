@@ -1,6 +1,6 @@
 package game.engine;
 
-import game.GUI.GUI;
+import game.GUI.Action;
 import game.engine.board.GameBoard;
 import game.factories.BoardFactory;
 
@@ -12,15 +12,10 @@ import game.factories.BoardFactory;
 public class GameEngine {
 	BoardFactory boardFactory;
 	GameBoard gameBoard;
-	GUI gui;
 	/**
 	 * use this one!
 	 */
-	public GameEngine(GUI gui) {
-		this.gui = gui;
-
-		System.out.println("in game engine");
-
+	public GameEngine() {
 		// create and apply settings
 
 		// create the game board
@@ -29,28 +24,16 @@ public class GameEngine {
 	}
 
 	/**
-	 * This method is the main game loop.
-	 * @param gameBoard
+	 * tests if a given action is possible
+	 * @param action
+	 * @return
 	 */
-	public void runGame() {
-		// draw the inital game state
-		gui.update(gameBoard);
+	public boolean isActionPossible(Action action) {
+		return gameBoard.getPlayer().isActionPossible(gameBoard, action);
+	}
 
-		// main game loop
-		boolean gameRunning = true;
-		while (gameRunning) {
-			// wait for input then update game state
-			/* This line waits for an input, if a valid one is given it tries to
-			 * perform that action. If the action is not valid then it waits for
-			 * the next input, if it is then it performs it and moves on.
-			 *
-			 * This may need re-writing as more complex input happens.
-			 */
-			while (!gameBoard.getPlayer().move(gameBoard, gui.getNextAction()));
-			gui.update(gameBoard);
-			// here is where all the enemy actions will occour
-
-		}
+	public boolean runAction(Action action) {
+		return gameBoard.getPlayer().runAction(gameBoard, action);
 	}
 
 	public GameBoard getGameBoard() {

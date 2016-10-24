@@ -1,39 +1,106 @@
 package game.GUI.FXGUI;
 
+import java.io.IOException;
+
 import game.GUI.Action;
-import game.GUI.GUI;
 import game.engine.GameEngine;
 import game.engine.board.GameBoard;
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
 
-public class FXGUI implements GUI {
+public class FXGUI extends Application {
 
 	GameEngine gameEngine;
-	Input input;
 	AsciiRenderer renderer;
+	TextFlow txtScreen;
+	Button btnUp;
+	Button btnDown;
+	Button btnLeft;
+	Button btnRight;
+
+	public static void main(String[] args) {
+		launch(args);
+	}
 
 	public FXGUI() {
-		input = new Input();
 		renderer = new AsciiRenderer();
-		gameEngine = new GameEngine(this);
-		gameEngine.runGame();
+		gameEngine = new GameEngine();
 	}
 
 	/**
-	 * called from the game engine whenever there is new information
-	 * to update (e.g. player or enemy moves, takes damage etc.)
+	 * called whenever there is new information to update (e.g. player or
+	 * enemy moves, takes damage etc.)
 	 */
-	@Override
 	public void update(GameBoard gameBoard) {
-		System.out.println(renderer.getBoardAsString(gameBoard));
+		Text screenText = new Text(renderer.getBoardAsString(gameBoard));
+		txtScreen.getChildren().clear();
+		txtScreen.getChildren().add(screenText);
 	}
 
-	/**
-	 * use this method to get the next possible player action. It will effectively
-	 * pause the game until a valid input is made (although it won't check if the action
-	 * this input is attached to is possible).
-	 */
-	@Override
-	public Action getNextAction() {
-		return input.getNextAction();
-	}
+    @Override
+    public void start(Stage primaryStage) throws IOException {
+		Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
+        Scene scene = new Scene(root);
+        primaryStage.setTitle("Adventure Game");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        txtScreen = (TextFlow) scene.lookup("#txtScreen");
+        btnUp = (Button) scene.lookup("#btnUp");
+    	btnDown = (Button) scene.lookup("#btnDown");
+    	btnLeft = (Button) scene.lookup("#btnLeft");
+    	btnRight = (Button) scene.lookup("#btnRight");
+
+    	setupButtons();
+
+    	// draw the starting scene
+    	update(gameEngine.getGameBoard());
+    }
+
+    private void setupButtons() {
+    	btnUp.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				runAction(Action.UP);
+			}
+    	});
+
+    	btnDown.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				runAction(Action.DOWN);
+			}
+    	});
+
+    	btnLeft.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				runAction(Action.LEFT);
+			}
+    	});
+
+    	btnRight.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				runAction(Action.RIGHT);
+			}
+    	});
+    }
+
+    private void runAction(Action action) {
+    	if (gameEngine.isActionPossible(action)) {
+    		// perform the action
+    		gameEngine.runAction(action);
+    		// update the render
+    		update(gameEngine.getGameBoard());
+    	}
+    }
 }
