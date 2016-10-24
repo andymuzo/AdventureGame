@@ -1,7 +1,7 @@
 package game.agents.player;
 
+import game.GUI.Action;
 import game.engine.board.GameBoard;
-import game.engine.input.Action;
 
 /**
  * The class containing everything to do with the Player, including movement,

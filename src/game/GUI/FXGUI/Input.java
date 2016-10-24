@@ -1,16 +1,18 @@
-package game.engine.input;
+package game.GUI.FXGUI;
 
 import java.util.Scanner;
 
+import game.GUI.Action;
+
 public class Input {
 	Scanner scan;
-	
+
 	public Input() {
 		scan = new Scanner(System.in);
 	}
-	
+
 	/**
-	 * use this class to get the next possible player action. It will effectively 
+	 * use this method to get the next possible player action. It will effectively
 	 * pause the game until a valid input is made (although it won't check if the action
 	 * this input is attached to is possible).
 	 * @return
@@ -39,7 +41,7 @@ public class Input {
 			case "D":
 				action = Action.RIGHT;
 				isInputValid = true;
-				break;	
+				break;
 			}
 		}
 		return action;

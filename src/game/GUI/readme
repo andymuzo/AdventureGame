@@ -1,0 +1,1 @@
+For now this will be a JavaFX window that will handle the input and rendering. The game engine will be kept entirely seperate so the GUI may only make calls to methods contained in the game engine (i.e. if you need a new bit of game logic, write it in game engine and call it from the GUI). When we want a better GUI we can plug the old engine into the new GUI.

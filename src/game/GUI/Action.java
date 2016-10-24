@@ -1,4 +1,4 @@
-package game.engine.input;
+package game.GUI;
 
 /**
  * all of the possible player actions in the game
