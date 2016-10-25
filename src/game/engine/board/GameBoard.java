@@ -19,7 +19,7 @@ public class GameBoard {
 	private List<Room> rooms;
 	private Player player;
 	private BoardFactory factory;
-	List<? extends Actor> actors;
+	List<Actor> actors;
 
 	/**
 	 * use this constructor for putting a List of rooms into the gameboard
@@ -58,6 +58,10 @@ public class GameBoard {
 
 	public void setPlayer(Player player) {
 		this.player = player;
+	}
+	
+	public void addActors(List<Actor> newActors) {
+		actors.addAll(newActors);
 	}
 
 	/**

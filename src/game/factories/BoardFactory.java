@@ -38,12 +38,8 @@ public class BoardFactory {
 	 * @return the new GameBoard with the first 3 rooms generated
 	 */
 	public GameBoard getNewGameBoard() {
-
-		int level = 1;
-
 		ArrayList<Room> rooms = new ArrayList<>();
 		rooms.add(getNewFirstRoom());
-
 
 		// create a player at coords 1,1 in room 0, at level 1
 		Player player = new Player(2, 3, 0, 1);
@@ -57,16 +53,18 @@ public class BoardFactory {
 
 	/**
 	 * appends a new room of appropriate level to the end of the rooms list
+	 * fills it with actors of the appropriate level
 	 * @param rooms
 	 * @param playerLevel
 	 */
 	public void addNewRoom(GameBoard gameBoard) {
-		Room room = getNewRandomRoom(gameBoard.getPlayer().getLevel());
+		Room room = getNewRandomRoom();
 		gameBoard.getRooms().add(room);
-		// TODO: pick up where I left off here
 		// add the actors to the gameBoard
-		List<Actor> actors = actorFactory.getActorsForRoom(room, level);
-
+		int level = gameBoard.getPlayer().getLevel();
+		int roomNumber = gameBoard.getRooms().size();
+		List<Actor> actors = actorFactory.getActorsForRoom(room, level, roomNumber);
+		gameBoard.addActors(actors);
 	}
 
 	//******************************************************************
@@ -84,7 +82,7 @@ public class BoardFactory {
 		return getNewBasicRoom(roomHeight, roomWidth, entranceRow, exitRow);
 	}
 
-	private Room getNewRandomRoom(int level) {
+	private Room getNewRandomRoom() {
 		Room room;
 //		switch (0) { // testing top room
 		switch (rand.nextInt(7) + 1) {

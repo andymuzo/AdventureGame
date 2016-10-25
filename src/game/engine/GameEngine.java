@@ -1,13 +1,9 @@
 package game.engine;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import game.GUI.Action;
 import game.GUI.FXGUI.GUI;
 import game.engine.board.GameBoard;
 import game.factories.BoardFactory;
-import game.agents.actors.Actor;
 
 /**
  * This class runs in it's constructor the main game loop

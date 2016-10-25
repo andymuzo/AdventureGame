@@ -1,5 +1,6 @@
 package game.factories;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import game.agents.actors.Actor;
@@ -17,13 +18,13 @@ public class ActorFactory {
 	 * @param room
 	 * @param level
 	 */
-	public List<Actor> getActorsForRoom(Room room, int level) {
+	public List<Actor> getActorsForRoom(Room room, int level, int roomNumber) {
 		// I need the room to be able to find the free tiles and position the actors as I make them
 		// I also need to know the room's position number in the list even though it hasn't been added yet...
+		List<Actor> actors = new ArrayList<>();
 
 
-
-
+		return actors;
 	}
 
 }
