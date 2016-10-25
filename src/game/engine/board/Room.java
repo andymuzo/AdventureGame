@@ -1,5 +1,6 @@
 package game.engine.board;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -56,6 +57,11 @@ public class Room {
 		// remember, outer list is y coords, inner list is x coords
 		return tiles.get(y).get(x);
 	}
+	
+	public Tile getTileAtCoords(int[] coords) {
+		// remember, outer list is y coords, inner list is x coords
+		return tiles.get(coords[1]).get(coords[0]);
+	}
 
 	public void setTileAtCoords(Tile tile, int x, int y) {
 		tiles.get(y).set(x, tile);
@@ -86,5 +92,17 @@ public class Room {
 	 */
 	public int[] getEntranceCoords() {
 		return entranceCoords;
+	}
+	
+	public List<int[]> getEmptyFloorTileCoords() {
+		List<int[]> coords = new ArrayList<>();
+		for (int i = 0; i < tiles.size(); i++) {
+			for (int j = 0; j < tiles.get(0).size(); j++) {
+				if (tiles.get(i).get(j).getTileType() == TileType.FLOOR) {
+					coords.add(new int[] {j, i});
+				}
+			}
+		}
+		return coords;
 	}
 }

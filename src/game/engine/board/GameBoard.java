@@ -47,6 +47,10 @@ public class GameBoard {
 	public Room getPlayerRoom() {
 		return rooms.get(player.getRoomPos());
 	}
+	
+	public Room getRoom(int roomNumber) {
+		return rooms.get(roomNumber);
+	}
 
 	public void setRooms(List<Room> rooms) {
 		this.rooms = rooms;
@@ -72,9 +76,13 @@ public class GameBoard {
 		// for now just update actors in the player's room!
 		for (Actor actor : actors) {
 			if (actor.getRoomNumber() == player.getRoomPos()) {
-
+				actor.update(this);
 			}
 		}
+	}
+	
+	public List<Actor> getActors() {
+		return actors;
 	}
 
 }

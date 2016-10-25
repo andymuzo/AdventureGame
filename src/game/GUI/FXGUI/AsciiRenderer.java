@@ -1,5 +1,7 @@
 package game.GUI.FXGUI;
 
+import game.agents.actors.Actor;
+import game.agents.actors.ActorID;
 import game.engine.board.GameBoard;
 import game.engine.board.Room;
 
@@ -59,8 +61,8 @@ public class AsciiRenderer {
 		// draw the actors in their correct positions in the array
 		// draw items
 
-		// draw enemies
-
+		drawActors(asciiRoom, gameBoard);
+		
 		// draw player
 		asciiRoom[gameBoard.getPlayer().getXPos()][gameBoard.getPlayer().getYPos()] = '@';
 
@@ -81,5 +83,22 @@ public class AsciiRenderer {
 	    }
 	    return builder.toString();
 	}
-
+	
+	private void drawActors(char[][] asciiRoom, GameBoard gameBoard) {
+		for (Actor actor : gameBoard.getActors()) {
+			if (actor.getRoomNumber() == gameBoard.getPlayer().getRoomPos()) {
+				// draw it!
+				asciiRoom[actor.getCoords()[0]][actor.getCoords()[1]] = getActorChar(actor.getActorID());
+			}
+		}
+	}
+	
+	private char getActorChar(ActorID actorID) {
+		switch (actorID) {
+		case SHEEP:
+			return 's';
+		default:
+			return 'e';
+		}
+	}
 }

@@ -7,5 +7,6 @@ public interface Actor {
 	public void hit();
 	public int getActorLevel();
 	public int[] getCoords();
-	public int getRoomNumber();
+	public int getRoomNumber();	
+	public ActorID getActorID();
 }

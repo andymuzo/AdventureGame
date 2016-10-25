@@ -2,8 +2,10 @@ package game.factories;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import game.agents.actors.Actor;
+import game.agents.actors.enemies.Sheep;
 import game.engine.board.Room;
 
 /**
@@ -13,18 +15,23 @@ import game.engine.board.Room;
  */
 public class ActorFactory {
 
+	Random rand;
+	
+	public ActorFactory() {
+		rand = new Random(System.currentTimeMillis());
+	}
+	
 	/**
 	 * places actors in the room of a suitable level
 	 * @param room
 	 * @param level
 	 */
 	public List<Actor> getActorsForRoom(Room room, int level, int roomNumber) {
-		// I need the room to be able to find the free tiles and position the actors as I make them
-		// I also need to know the room's position number in the list even though it hasn't been added yet...
 		List<Actor> actors = new ArrayList<>();
-
-
+		List<int[]> coords = room.getEmptyFloorTileCoords();
+		
+		// for now just place a single sheep in each room :)
+		actors.add(new Sheep(coords.get(rand.nextInt(coords.size())), roomNumber));
 		return actors;
 	}
-
 }

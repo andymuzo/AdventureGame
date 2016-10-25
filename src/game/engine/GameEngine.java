@@ -46,7 +46,6 @@ public class GameEngine {
 	 * when called it will update all the turns of the actors in the player's room and the 2 rooms on either side.
 	 */
 	public void updateActors(GUI gui) {
-		// for now just update actors in the player's room!
 		gameBoard.updateActors(gui);
 	}
 }

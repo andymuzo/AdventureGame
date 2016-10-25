@@ -28,7 +28,7 @@ public class BoardFactory {
 	 */
 	public BoardFactory() {
 		// empty constructor to start with. Settings should be passed as a Settings class.
-		// TODO: add a Settings class and a method to recieve them here
+		// TODO: add a Settings class and a method to receive them here
 		 rand = new Random(System.currentTimeMillis());
 		 actorFactory = new ActorFactory();
 	}
@@ -62,9 +62,9 @@ public class BoardFactory {
 		gameBoard.getRooms().add(room);
 		// add the actors to the gameBoard
 		int level = gameBoard.getPlayer().getLevel();
-		int roomNumber = gameBoard.getRooms().size();
-		List<Actor> actors = actorFactory.getActorsForRoom(room, level, roomNumber);
-		gameBoard.addActors(actors);
+		int roomNumber = gameBoard.getRooms().size() - 1;
+		gameBoard.addActors(actorFactory.getActorsForRoom(room, level, roomNumber));
+		System.out.println("added sheep to room number " + roomNumber);
 	}
 
 	//******************************************************************
@@ -289,8 +289,6 @@ public class BoardFactory {
 				// draw walls
 				addTileTypeToArea(room, TileType.WALL, topLeft, botRight);
 				addTileTypeToArea(room, TileType.EMPTY, topLeft, new int[] {botRight[0] - 1, botRight[1] -1});
-
-				System.out.println("in top left, top left=" + topLeft[0] + "," + topLeft[1] + ", bot right=" + botRight[0] + ", " + botRight[1]);
 			} else {
 				// take bot left
 				int[] topLeft = {0, (room.getHeight() - rand.nextInt(room.getHeight() - room.getEntranceCoords()[1] - 2) - 2)};
@@ -298,8 +296,6 @@ public class BoardFactory {
 				// draw walls
 				addTileTypeToArea(room, TileType.WALL, topLeft, botRight);
 				addTileTypeToArea(room, TileType.EMPTY, new int[] {topLeft[0], topLeft[1] + 1}, new int[] {botRight[0] - 1, botRight[1]});
-
-				System.out.println("in bot left, top left=" + topLeft[0] + "," + topLeft[1] + ", bot right=" + botRight[0] + ", " + botRight[1]);
 			}
 		} else {
 			// now check for door position, take the chunk from the bigger side
@@ -311,9 +307,6 @@ public class BoardFactory {
 				// draw walls
 				addTileTypeToArea(room, TileType.WALL, topLeft, botRight);
 				addTileTypeToArea(room, TileType.EMPTY, new int[] { topLeft[0] + 1, topLeft[1] }, new int[] { botRight[0], botRight[1] - 1 });
-
-				System.out.println("in top right, top left=" + topLeft[0] + "," + topLeft[1] + ", bot right="
-						+ botRight[0] + ", " + botRight[1]);
 			} else {
 				// take bot right
 				int[] topLeft = { rand.nextInt(room.getWidth() - 3) + 2,
@@ -323,9 +316,6 @@ public class BoardFactory {
 				addTileTypeToArea(room, TileType.WALL, topLeft, botRight);
 				addTileTypeToArea(room, TileType.EMPTY, new int[] { topLeft[0] + 1, topLeft[1] + 1 },
 						botRight);
-
-				System.out.println("in bot right, top left=" + topLeft[0] + "," + topLeft[1] + ", bot right="
-						+ botRight[0] + ", " + botRight[1]);
 			}
 		}
 	}
