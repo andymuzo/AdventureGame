@@ -2,6 +2,7 @@ package game.agents.player;
 
 import game.GUI.Action;
 import game.engine.board.GameBoard;
+import game.engine.board.TileType;
 
 /**
  * The class containing everything to do with the Player, including movement,
@@ -13,6 +14,7 @@ public class Player {
 	private int xPos;
 	private int yPos;
 	private int roomPos;
+	private int level;
 
 	/**
 	 * create a new player at the specified coordinates in the numbered room
@@ -20,10 +22,11 @@ public class Player {
 	 * @param yPos
 	 * @param roomPos
 	 */
-	public Player(int xPos, int yPos, int roomPos) {
+	public Player(int xPos, int yPos, int roomPos, int level) {
 		this.setXPos(xPos);
 		this.setYPos(yPos);
 		this.setRoomPos(roomPos);
+		this.setLevel(level);
 	}
 
 	public int getXPos() {
@@ -140,7 +143,14 @@ public class Player {
 	 * @return
 	 */
 	private boolean canMoveLeft(GameBoard gameBoard) {
-		return gameBoard.getPlayerRoom().isTileAtCoordsPassable(xPos - 1, yPos);
+		// this must include moving to the previous room
+		if (gameBoard.getPlayerRoom().getTileAtCoords(xPos, yPos).getTileType() == TileType.ENTRANCE_DOOR) {
+			// must be in a doorway
+			return true;
+		} else {
+			// if not then check for movement in room
+			return gameBoard.getPlayerRoom().isTileAtCoordsPassable(xPos - 1, yPos);
+		}
 	}
 
 	/**
@@ -149,7 +159,13 @@ public class Player {
 	 * @return
 	 */
 	private boolean canMoveRight(GameBoard gameBoard) {
-		return gameBoard.getPlayerRoom().isTileAtCoordsPassable(xPos + 1, yPos);
+		// this must include moving to the next room
+		if (gameBoard.getPlayerRoom().getTileAtCoords(xPos, yPos).getTileType() == TileType.EXIT_DOOR) {
+			// must be in a doorway
+			return true;
+		} else {
+			return gameBoard.getPlayerRoom().isTileAtCoordsPassable(xPos + 1, yPos);
+		}
 	}
 
 	/**
@@ -183,8 +199,14 @@ public class Player {
 	private boolean moveLeft(GameBoard gameBoard) {
 		// left is negative x
 		if (canMoveLeft(gameBoard)) {
-			xPos--;
-			return true;
+			// check to see if need to move to the previous room
+			if (gameBoard.getPlayerRoom().getTileAtCoords(xPos, yPos).getTileType() == TileType.ENTRANCE_DOOR) {
+				// must be in a doorway
+				return moveToPreviousRoom(gameBoard);
+			} else {
+				xPos--;
+				return true;
+			}
 		} else return false;
 	}
 
@@ -195,8 +217,55 @@ public class Player {
 	private boolean moveRight(GameBoard gameBoard) {
 		// right is positive x
 		if (canMoveRight(gameBoard)) {
-			xPos++;
+			if (gameBoard.getPlayerRoom().getTileAtCoords(xPos, yPos).getTileType() == TileType.EXIT_DOOR) {
+				// must be in a doorway
+				return moveToNextRoom(gameBoard);
+			} else {
+				xPos++;
+				return true;
+			}
+		} else return false;
+	}
+
+	/**
+	 * if the current room isn't the starting room, move to the doorway of the previous one
+	 * NOTE: there shouldn't be an entry door in the first room anyhow!
+	 * @param gameBoard
+	 * @return
+	 */
+	private boolean moveToPreviousRoom(GameBoard gameBoard) {
+		if (getRoomPos() != 0) {
+			// not in starting room
+			roomPos--;
+			int[] exitCoords = gameBoard.getPlayerRoom().getExitCoords();
+			xPos = exitCoords[0];
+			yPos = exitCoords[1];
 			return true;
 		} else return false;
 	}
+
+	/**
+	 * moves to the next room and creates a new room in the list if there would be less than 2 rooms ahead of player
+	 * @param gameBoard
+	 * @return
+	 */
+	private boolean moveToNextRoom(GameBoard gameBoard) {
+		roomPos++;
+		// trigger the creation of a new room if needed (there should always be 2 rooms generated ahead of the player)
+		gameBoard.createNextRoom();
+
+		int[] entranceCoords = gameBoard.getPlayerRoom().getEntranceCoords();
+		xPos = entranceCoords[0];
+		yPos = entranceCoords[1];
+		return true;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
 }
+

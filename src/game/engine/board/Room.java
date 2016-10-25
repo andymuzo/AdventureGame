@@ -8,12 +8,16 @@ import java.util.List;
  *
  */
 public class Room {
-	List<List<Tile>> tiles;
-	
-	public Room(List<List<Tile>> tiles) {
+	private List<List<Tile>> tiles;
+	private int[] entranceCoords;
+	private int[] exitCoords;
+
+	public Room(List<List<Tile>> tiles, int[] entranceCoords, int[] exitCoords) {
 		this.tiles = tiles;
+		this.entranceCoords = entranceCoords;
+		this.exitCoords = exitCoords;
 	}
-	
+
 	/**
 	 * Try to avoid using this method for getting the tiles and manipulating them elsewhere,
 	 * much better to put all the Tile manipulation methods in this class so they can be
@@ -23,7 +27,7 @@ public class Room {
 	public List<List<Tile>> getTiles() {
 		return tiles;
 	}
-	
+
 	/**
 	 * height is the size of the max y coordinate + 1
 	 * @return
@@ -31,7 +35,7 @@ public class Room {
 	public int getHeight() {
 		return tiles.size();
 	}
-	
+
 	/**
 	 * width is the size of the max x coordinate + 1
 	 * @return
@@ -39,7 +43,7 @@ public class Room {
 	public int getWidth() {
 		return tiles.get(0).size();
 	}
-	
+
 	/**
 	 * returns the tile at the given coords, useful for rendering.
 	 * Use isTileAtCoordsPassable(x,y) for collision detection.
@@ -51,7 +55,7 @@ public class Room {
 		// remember, outer list is y coords, inner list is x coords
 		return tiles.get(y).get(x);
 	}
-	
+
 	/**
 	 * This takes care of the collision detection for walls and other impassable
 	 * Tiles.
@@ -61,5 +65,21 @@ public class Room {
 	 */
 	public boolean isTileAtCoordsPassable(int xPos, int yPos) {
 		return getTileAtCoords(xPos, yPos).isTilePassable();
+	}
+
+	/**
+	 * returns the location of the exit door
+	 * @return
+	 */
+	public int[] getExitCoords() {
+		return exitCoords;
+	}
+
+	/**
+	 * returns the location of the entrance door
+	 * @return
+	 */
+	public int[] getEntranceCoords() {
+		return entranceCoords;
 	}
 }

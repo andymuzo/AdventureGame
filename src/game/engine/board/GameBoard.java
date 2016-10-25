@@ -3,6 +3,7 @@ package game.engine.board;
 import java.util.List;
 
 import game.agents.player.Player;
+import game.factories.BoardFactory;
 
 /**
  * This class is for the main game board that contains all of the game's rooms, the
@@ -14,21 +15,30 @@ import game.agents.player.Player;
 public class GameBoard {
 	private List<Room> rooms;
 	private Player player;
-	
+	private BoardFactory factory;
+
 	/**
 	 * use this constructor for putting a List of rooms into the gameboard
 	 * @param rooms
 	 * @param player
 	 */
-	public GameBoard(List<Room> rooms, Player player) {
+	public GameBoard(BoardFactory factory, List<Room> rooms, Player player) {
+		this.factory = factory;
 		this.setRooms(rooms);
 		this.setPlayer(player);
+	}
+
+	public void createNextRoom() {
+		// check to see if we need to first
+		if (player.getRoomPos() > rooms.size() - 2) {
+			factory.addNewRoom(rooms, player.getLevel());
+		}
 	}
 
 	public List<Room> getRooms() {
 		return rooms;
 	}
-	
+
 	public Room getPlayerRoom() {
 		return rooms.get(player.getRoomPos());
 	}
@@ -44,5 +54,5 @@ public class GameBoard {
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
-	
+
 }
