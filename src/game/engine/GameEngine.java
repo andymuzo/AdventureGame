@@ -1,8 +1,13 @@
 package game.engine;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import game.GUI.Action;
+import game.GUI.FXGUI.GUI;
 import game.engine.board.GameBoard;
 import game.factories.BoardFactory;
+import game.agents.actors.Actor;
 
 /**
  * This class runs in it's constructor the main game loop
@@ -12,6 +17,7 @@ import game.factories.BoardFactory;
 public class GameEngine {
 	BoardFactory boardFactory;
 	GameBoard gameBoard;
+
 	/**
 	 * use this one!
 	 */
@@ -38,5 +44,13 @@ public class GameEngine {
 
 	public GameBoard getGameBoard() {
 		return gameBoard;
+	}
+
+	/**
+	 * when called it will update all the turns of the actors in the player's room and the 2 rooms on either side.
+	 */
+	public void updateActors(GUI gui) {
+		// for now just update actors in the player's room!
+		gameBoard.updateActors(gui);
 	}
 }

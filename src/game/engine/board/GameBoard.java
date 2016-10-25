@@ -1,7 +1,10 @@
 package game.engine.board;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import game.GUI.FXGUI.GUI;
+import game.agents.actors.Actor;
 import game.agents.player.Player;
 import game.factories.BoardFactory;
 
@@ -16,6 +19,7 @@ public class GameBoard {
 	private List<Room> rooms;
 	private Player player;
 	private BoardFactory factory;
+	List<? extends Actor> actors;
 
 	/**
 	 * use this constructor for putting a List of rooms into the gameboard
@@ -26,12 +30,13 @@ public class GameBoard {
 		this.factory = factory;
 		this.setRooms(rooms);
 		this.setPlayer(player);
+		this.actors = new ArrayList<Actor>();
 	}
 
 	public void createNextRoom() {
 		// check to see if we need to first
 		if (player.getRoomPos() > rooms.size() - 2) {
-			factory.addNewRoom(rooms, player.getLevel());
+			factory.addNewRoom(this);
 		}
 	}
 
@@ -53,6 +58,19 @@ public class GameBoard {
 
 	public void setPlayer(Player player) {
 		this.player = player;
+	}
+
+	/**
+	 * when called it will update all the turns of the actors in the player's room and the 2 rooms on either side.
+	 * @param gui Needs this to be able to tell the gui to update the display after each actor's turn
+	 */
+	public void updateActors(GUI gui) {
+		// for now just update actors in the player's room!
+		for (Actor actor : actors) {
+			if (actor.getRoomNumber() == player.getRoomPos()) {
+
+			}
+		}
 	}
 
 }

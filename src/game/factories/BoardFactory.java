@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import game.agents.actors.Actor;
 import game.agents.player.Player;
 import game.engine.board.GameBoard;
 import game.engine.board.Room;
@@ -21,7 +22,7 @@ public class BoardFactory {
 	// i.e. multiple factories with different settings
 
 	Random rand; // useful for getting random numbers throughout the class
-
+	ActorFactory actorFactory;
 	/**
 	 * create a blank factory.
 	 */
@@ -29,6 +30,7 @@ public class BoardFactory {
 		// empty constructor to start with. Settings should be passed as a Settings class.
 		// TODO: add a Settings class and a method to recieve them here
 		 rand = new Random(System.currentTimeMillis());
+		 actorFactory = new ActorFactory();
 	}
 
 	/**
@@ -41,13 +43,16 @@ public class BoardFactory {
 
 		ArrayList<Room> rooms = new ArrayList<>();
 		rooms.add(getNewFirstRoom());
-		rooms.add(getNewRandomRoom(level));
-		rooms.add(getNewRandomRoom(level));
+
 
 		// create a player at coords 1,1 in room 0, at level 1
 		Player player = new Player(2, 3, 0, 1);
+		GameBoard gameBoard = new GameBoard(this, rooms, player);
+		addNewRoom(gameBoard);
+		addNewRoom(gameBoard);
 
-		return new GameBoard(this, rooms, player);
+
+		return gameBoard;
 	}
 
 	/**
@@ -55,8 +60,13 @@ public class BoardFactory {
 	 * @param rooms
 	 * @param playerLevel
 	 */
-	public void addNewRoom(List<Room> rooms, int playerLevel) {
-		rooms.add(getNewRandomRoom(playerLevel));
+	public void addNewRoom(GameBoard gameBoard) {
+		Room room = getNewRandomRoom(gameBoard.getPlayer().getLevel());
+		gameBoard.getRooms().add(room);
+		// TODO: pick up where I left off here
+		// add the actors to the gameBoard
+		List<Actor> actors = actorFactory.getActorsForRoom(room, level);
+
 	}
 
 	//******************************************************************
@@ -107,9 +117,6 @@ public class BoardFactory {
 			room = getRandomBasicSmallRoom();
 			break;
 		}
-		// populate with enemies, NPCs and items
-
-
 		return room;
 	}
 

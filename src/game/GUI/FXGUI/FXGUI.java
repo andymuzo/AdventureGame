@@ -16,7 +16,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
-public class FXGUI extends Application {
+public class FXGUI extends Application implements GUI {
 
 	GameEngine gameEngine;
 	AsciiRenderer renderer;
@@ -35,10 +35,10 @@ public class FXGUI extends Application {
 		gameEngine = new GameEngine();
 	}
 
-	/**
-	 * called whenever there is new information to update (e.g. player or
-	 * enemy moves, takes damage etc.)
+	/* (non-Javadoc)
+	 * @see game.GUI.FXGUI.GUI#update(game.engine.board.GameBoard)
 	 */
+	@Override
 	public void update(GameBoard gameBoard) {
 		Text screenText = new Text(renderer.getBoardAsString(gameBoard));
 		txtScreen.getChildren().clear();
@@ -99,6 +99,8 @@ public class FXGUI extends Application {
     	if (gameEngine.isActionPossible(action)) {
     		// perform the action
     		gameEngine.runAction(action);
+    		// update all the actors
+    		gameEngine.updateActors(this);
     		// update the render
     		update(gameEngine.getGameBoard());
     	}
