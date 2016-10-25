@@ -67,24 +67,67 @@ public class BoardFactory {
 	 * @return
 	 */
 	private Room getNewFirstRoom() {
-		int level = 1;
 		int roomHeight = 7;
 		int roomWidth = 7;
 		int entranceRow = -1; // use -1 as a value that wont break the method but will never come up
 		int exitRow = 3;
-		return getNewBasicRoom(level, roomHeight, roomWidth, entranceRow, exitRow);
+		return getNewBasicRoom(roomHeight, roomWidth, entranceRow, exitRow);
 	}
 
 	private Room getNewRandomRoom(int level) {
-		// for now just returns rectangular rooms of random size. Could be developed to call a range of
-		// different getRoom functions of various shapes for variety.
-		int minRoomSpan = 3;
+		Room room;
+//		switch (0) { // testing top room
+		switch (rand.nextInt(4) + 1) {
+		case 0:
+			// use this one for testing, won't be called in the game
+			room = getRandomDonutRoom();
+			break;
+		case 1:
+			room = getRandomBasicSmallRoom();
+			break;
+		case 2:
+			room = getRandomBasicLargeRoom();
+			break;
+		case 3:
+			room = getRandomCorridor();
+			break;
+		case 4:
+			room = getRandomDonutRoom();
+			break;
+		default:
+			room = getRandomBasicSmallRoom();
+			break;
+		}
+		// populate with enemies, NPCs and items
 
-		int roomHeight = rand.nextInt(11) + minRoomSpan;
-		int roomWidth = rand.nextInt(11) + minRoomSpan;
+
+		return room;
+	}
+
+	/**
+	 * calls the getNewBasicRoom method with randomised inputs
+	 * @return
+	 */
+	private Room getRandomBasicSmallRoom() {
+		int minRoomSpan = 4;
+		int roomHeight = rand.nextInt(5) + minRoomSpan;
+		int roomWidth = rand.nextInt(5) + minRoomSpan;
 		int entranceRow = rand.nextInt(roomHeight - 2) + 1;
 		int exitRow = rand.nextInt(roomHeight - 2) + 1;
-		return getNewBasicRoom(level, roomHeight, roomWidth, entranceRow, exitRow);
+		return getNewBasicRoom(roomHeight, roomWidth, entranceRow, exitRow);
+	}
+
+	/**
+	 * calls the getNewBasicRoom method with randomised inputs
+	 * @return
+	 */
+	private Room getRandomBasicLargeRoom() {
+		int minRoomSpan = 6;
+		int roomHeight = rand.nextInt(8) + minRoomSpan;
+		int roomWidth = rand.nextInt(8) + minRoomSpan;
+		int entranceRow = rand.nextInt(roomHeight - 2) + 1;
+		int exitRow = rand.nextInt(roomHeight - 2) + 1;
+		return getNewBasicRoom(roomHeight, roomWidth, entranceRow, exitRow);
 	}
 
 	/**
@@ -96,10 +139,7 @@ public class BoardFactory {
 	 * @param exitRow which row should the exit door be on, should be between 1 and height-1
 	 * @return a new Room object
 	 */
-	private Room getNewBasicRoom(int level, int height, int width, int entranceRow, int exitRow) {
-		// simple for now and ignores the player level
-		// TODO: create much more interesting rooms!
-
+	private Room getNewBasicRoom(int height, int width, int entranceRow, int exitRow) {
 		/* NOTE: contrary to regular coordinate systems, y is the outer list (i.e. the row number)
 		 * and x is the inner list (i.e. the column number). This oddness should be abstracted away
 		 * using the coordinate system for items and players in their classes, and in the Room class
@@ -117,6 +157,74 @@ public class BoardFactory {
 		int[] exitCoords = {width - 1, exitRow};
 
 		return new Room(tiles, entranceCoords, exitCoords);
+	}
+
+	/**
+	 * Create a corridor room type
+	 * @param isHorizontal vertical corridor if false, will randomly have entrance at top or bot
+	 * @param length
+	 * @return
+	 */
+	private Room getRandomCorridor() {
+		boolean isHorizontal = rand.nextBoolean();
+		boolean isTopToBot = rand.nextBoolean();
+		int roomHeight = isHorizontal ? 3 : rand.nextInt(12) + 5;
+		int roomWidth = isHorizontal ? rand.nextInt(12) + 5 : 3;
+		int entranceRow = isHorizontal ? 1 : (isTopToBot ? 1 : roomHeight - 2);
+		int exitRow = isHorizontal ? 1 : (isTopToBot ? roomHeight - 2 : 1);
+		return getNewBasicRoom(roomHeight, roomWidth, entranceRow, exitRow);
+	}
+
+	/**
+	 * a large room with a large central pillar or void
+	 * @return
+	 */
+	private Room getRandomDonutRoom() {
+		// get a large room
+		int minRoomSpan = 7;
+		int roomHeight = rand.nextInt(7) + minRoomSpan;
+		int roomWidth = rand.nextInt(7) + minRoomSpan;
+		int entranceRow = rand.nextInt(roomHeight - 2) + 1;
+		int exitRow = rand.nextInt(roomHeight - 2) + 1;
+		Room room = getNewBasicRoom(roomHeight, roomWidth, entranceRow, exitRow);
+		// add the pillar
+		// min width of pillar is 3 tiles
+		// min top position is (2, 2)
+		int[] topRight = {rand.nextInt(roomWidth - 6) + 2, rand.nextInt(roomHeight - 6) + 2};
+		int[] size = {rand.nextInt(roomWidth - topRight[0] - 4) + 3, rand.nextInt(roomHeight - topRight[1] - 4) + 3};
+		addPillarToRoom(room, topRight, size);
+		return room;
+	}
+
+
+	private void addPillarToRoom(Room room, int[] topRight, int[] size) {
+		// draw the top wall of the pillar
+		for (int i = 0; i < size[0]; i++) {
+			room.setTileAtCoords(new Tile(TileType.WALL), topRight[0] + i, topRight[1]);
+		}
+
+		// draw the middle walls
+		for (int i = 1; i < size[1] - 1; i++) {
+			room.setTileAtCoords(new Tile(TileType.WALL), topRight[0], topRight[1] + i);
+		}
+		for (int i = 1; i < size[1] - 1; i++) {
+			room.setTileAtCoords(new Tile(TileType.WALL), topRight[0] + size[0] - 1, topRight[1] + i);
+		}
+
+		// draw the bottom wall of the pillar
+		for (int i = 0; i < size[0]; i++) {
+			room.setTileAtCoords(new Tile(TileType.WALL), topRight[0] + i, topRight[1] + size[1] - 1);
+		}
+
+		// draw the void
+		if (size[0] > 2 && size[1] > 2) {
+			// requires a middle void
+			for (int i = 1; i < size[0] - 1; i++) {
+				for (int j = 1; j < size[1] - 1; j++) {
+					room.setTileAtCoords(new Tile(TileType.EMPTY), topRight[0] + i, topRight[1] + j);
+				}
+			}
+		}
 	}
 
 	/**

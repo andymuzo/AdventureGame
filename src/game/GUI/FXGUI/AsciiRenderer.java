@@ -18,7 +18,7 @@ public class AsciiRenderer {
 		// create the array of the right size
 		int height = room.getHeight();
 		int width = room.getWidth();
-		char[][] asciiRoom = new char[height][width];
+		char[][] asciiRoom = new char[width][height];
 
 		// populate it with the tile icons
 
@@ -32,18 +32,23 @@ public class AsciiRenderer {
 		 * 5 - - - - - -
 		 */
 
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
+		// It really bugs me that I have to put the x and y coords the wrong way around here
+		// so that getTileAtCoords returns the correct tile! Not sure there's much to be done about it though.
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
 				switch (room.getTileAtCoords(x, y).getTileType()) {
 					case FLOOR:
-						asciiRoom[y][x] = '-';
+						asciiRoom[x][y] = '-';
 						break;
 					case WALL:
-						asciiRoom[y][x] = 'X';
+						asciiRoom[x][y] = 'X';
+						break;
+					case EMPTY:
+						asciiRoom[x][y] = ' ';
 						break;
 					case ENTRANCE_DOOR:
 					case EXIT_DOOR:
-						asciiRoom[y][x] = '|';
+						asciiRoom[x][y] = '|';
 						break;
 					default:
 						break;
@@ -57,7 +62,7 @@ public class AsciiRenderer {
 		// draw enemies
 
 		// draw player
-		asciiRoom[gameBoard.getPlayer().getYPos()][gameBoard.getPlayer().getXPos()] = '@';
+		asciiRoom[gameBoard.getPlayer().getXPos()][gameBoard.getPlayer().getYPos()] = '@';
 
 		// convert to a single string and return
 		return charArrayToString(asciiRoom);
@@ -65,11 +70,11 @@ public class AsciiRenderer {
 
 	private String charArrayToString(char[][] asciiArray) {
 		StringBuilder builder = new StringBuilder();
-	    for(int i = 0; i < asciiArray.length; i++)
+	    for(int i = 0; i < asciiArray[0].length; i++)
 	    {
-	        for(int j = 0; j < asciiArray[0].length; j++)
+	        for(int j = 0; j < asciiArray.length; j++)
 	        {
-	            builder.append(asciiArray[i][j]);
+	            builder.append(asciiArray[j][i]);
 	            builder.append(' ');
 	        }
 	        builder.append("\n");

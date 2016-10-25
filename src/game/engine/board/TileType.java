@@ -6,5 +6,5 @@ package game.engine.board;
  *
  */
 public enum TileType {
-	FLOOR, WALL, ENTRANCE_DOOR, EXIT_DOOR
+	FLOOR, WALL, ENTRANCE_DOOR, EXIT_DOOR, EMPTY
 }

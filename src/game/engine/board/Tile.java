@@ -7,7 +7,7 @@ package game.engine.board;
  */
 public class Tile {
 	private TileType type;
-	
+
 	/**
 	 * create a new tile with the TileType in the argument
 	 * @param type
@@ -15,13 +15,13 @@ public class Tile {
 	public Tile(TileType type) {
 		this.type = type;
 	}
-	
+
 	public TileType getTileType() {
 		return type;
 	}
-	
+
 	public boolean isTilePassable() {
-		if (type == TileType.WALL) return false; // add in all of the types that can't be passed here
+		if (type == TileType.WALL || type == TileType.EMPTY) return false; // add in all of the types that can't be passed here
 		else return true;
 	}
 }

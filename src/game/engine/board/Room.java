@@ -56,6 +56,10 @@ public class Room {
 		return tiles.get(y).get(x);
 	}
 
+	public void setTileAtCoords(Tile tile, int x, int y) {
+		tiles.get(y).set(x, tile);
+	}
+
 	/**
 	 * This takes care of the collision detection for walls and other impassable
 	 * Tiles.
