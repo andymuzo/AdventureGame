@@ -77,10 +77,10 @@ public class BoardFactory {
 	private Room getNewRandomRoom(int level) {
 		Room room;
 //		switch (0) { // testing top room
-		switch (rand.nextInt(4) + 1) {
+		switch (rand.nextInt(7) + 1) {
 		case 0:
 			// use this one for testing, won't be called in the game
-			room = getRandomDonutRoom();
+			room = getRandomSwissCheeseRoom();
 			break;
 		case 1:
 			room = getRandomBasicSmallRoom();
@@ -93,6 +93,15 @@ public class BoardFactory {
 			break;
 		case 4:
 			room = getRandomDonutRoom();
+			break;
+		case 5:
+			room = getRandomLRoom();
+			break;
+		case 6:
+			room = getRandomChunkedRoom();
+			break;
+		case 7:
+			room = getRandomSwissCheeseRoom();
 			break;
 		default:
 			room = getRandomBasicSmallRoom();
@@ -190,30 +199,52 @@ public class BoardFactory {
 		// add the pillar
 		// min width of pillar is 3 tiles
 		// min top position is (2, 2)
-		int[] topRight = {rand.nextInt(roomWidth - 6) + 2, rand.nextInt(roomHeight - 6) + 2};
-		int[] size = {rand.nextInt(roomWidth - topRight[0] - 4) + 3, rand.nextInt(roomHeight - topRight[1] - 4) + 3};
-		addPillarToRoom(room, topRight, size);
+		int[] topLeft = {rand.nextInt(roomWidth - 6) + 2, rand.nextInt(roomHeight - 6) + 2};
+		int[] size = {rand.nextInt(roomWidth - topLeft[0] - 4) + 3, rand.nextInt(roomHeight - topLeft[1] - 4) + 3};
+		addPillarToRoom(room, topLeft, size);
 		return room;
 	}
 
+	private Room getRandomSwissCheeseRoom() {
+		// get a large room
+				int minRoomSpan = 9;
+				int roomHeight = rand.nextInt(6) + minRoomSpan;
+				int roomWidth = rand.nextInt(6) + minRoomSpan;
+				int entranceRow = rand.nextInt(roomHeight - 2) + 1;
+				int exitRow = rand.nextInt(roomHeight - 2) + 1;
+				Room room = getNewBasicRoom(roomHeight, roomWidth, entranceRow, exitRow);
+				// add the pillar
+				// min width of pillar is 3 tiles
+				// min top position is (2, 2)
+				int[] topLeft = {rand.nextInt(roomWidth - 6) + 2, rand.nextInt(roomHeight - 6) + 2};
+				int[] size = {rand.nextInt(roomWidth - topLeft[0] - 4) + 3, rand.nextInt(roomHeight - topLeft[1] - 4) + 3};
+				addPillarToRoom(room, topLeft, size);
+				topLeft = new int[] {rand.nextInt(roomWidth - 6) + 2, rand.nextInt(roomHeight - 6) + 2};
+				size = new int[] {rand.nextInt(roomWidth - topLeft[0] - 4) + 3, rand.nextInt(roomHeight - topLeft[1] - 4) + 3};
+				addPillarToRoom(room, topLeft, size);
+				topLeft = new int[] {rand.nextInt(roomWidth - 6) + 2, rand.nextInt(roomHeight - 6) + 2};
+				size = new int[] {rand.nextInt(roomWidth - topLeft[0] - 4) + 3, rand.nextInt(roomHeight - topLeft[1] - 4) + 3};
+				addPillarToRoom(room, topLeft, size);
+				return room;
+	}
 
-	private void addPillarToRoom(Room room, int[] topRight, int[] size) {
+	private void addPillarToRoom(Room room, int[] topLeft, int[] size) {
 		// draw the top wall of the pillar
 		for (int i = 0; i < size[0]; i++) {
-			room.setTileAtCoords(new Tile(TileType.WALL), topRight[0] + i, topRight[1]);
+			room.setTileAtCoords(new Tile(TileType.WALL), topLeft[0] + i, topLeft[1]);
 		}
 
 		// draw the middle walls
 		for (int i = 1; i < size[1] - 1; i++) {
-			room.setTileAtCoords(new Tile(TileType.WALL), topRight[0], topRight[1] + i);
+			room.setTileAtCoords(new Tile(TileType.WALL), topLeft[0], topLeft[1] + i);
 		}
 		for (int i = 1; i < size[1] - 1; i++) {
-			room.setTileAtCoords(new Tile(TileType.WALL), topRight[0] + size[0] - 1, topRight[1] + i);
+			room.setTileAtCoords(new Tile(TileType.WALL), topLeft[0] + size[0] - 1, topLeft[1] + i);
 		}
 
 		// draw the bottom wall of the pillar
 		for (int i = 0; i < size[0]; i++) {
-			room.setTileAtCoords(new Tile(TileType.WALL), topRight[0] + i, topRight[1] + size[1] - 1);
+			room.setTileAtCoords(new Tile(TileType.WALL), topLeft[0] + i, topLeft[1] + size[1] - 1);
 		}
 
 		// draw the void
@@ -221,8 +252,108 @@ public class BoardFactory {
 			// requires a middle void
 			for (int i = 1; i < size[0] - 1; i++) {
 				for (int j = 1; j < size[1] - 1; j++) {
-					room.setTileAtCoords(new Tile(TileType.EMPTY), topRight[0] + i, topRight[1] + j);
+					room.setTileAtCoords(new Tile(TileType.EMPTY), topLeft[0] + i, topLeft[1] + j);
 				}
+			}
+		}
+	}
+
+	private Room getRandomLRoom() {
+		// get a random size room
+		int minRoomSpan = 5;
+		int roomHeight = rand.nextInt(10) + minRoomSpan;
+		int roomWidth = rand.nextInt(10) + minRoomSpan;
+		int entranceRow = rand.nextInt(roomHeight - 2) + 1;
+		int exitRow = rand.nextInt(roomHeight - 2) + 1;
+		Room room = getNewBasicRoom(roomHeight, roomWidth, entranceRow, exitRow);
+		// remove a chunk
+		removeCornerFromRoom(room);
+		return room;
+	}
+
+	private void removeCornerFromRoom(Room room) {
+		// figure out which corner to take
+		// toss of a coin for left or right
+		boolean isLeft = rand.nextBoolean();
+		if (isLeft) {
+			// now check for door position, take the chunk from the bigger side
+			if (room.getEntranceCoords()[1] > (room.getHeight() / 2)) {
+				// take top left
+				int[] topLeft = {0, 0};
+				int[] botRight = {rand.nextInt(room.getWidth() - 3) + 2, (room.getEntranceCoords()[1] - 1 - rand.nextInt(room.getEntranceCoords()[1] - 2))};
+				// draw walls
+				addTileTypeToArea(room, TileType.WALL, topLeft, botRight);
+				addTileTypeToArea(room, TileType.EMPTY, topLeft, new int[] {botRight[0] - 1, botRight[1] -1});
+
+				System.out.println("in top left, top left=" + topLeft[0] + "," + topLeft[1] + ", bot right=" + botRight[0] + ", " + botRight[1]);
+			} else {
+				// take bot left
+				int[] topLeft = {0, (room.getHeight() - rand.nextInt(room.getHeight() - room.getEntranceCoords()[1] - 2) - 2)};
+				int[] botRight = {rand.nextInt(room.getWidth() - 3) + 2, room.getHeight()};
+				// draw walls
+				addTileTypeToArea(room, TileType.WALL, topLeft, botRight);
+				addTileTypeToArea(room, TileType.EMPTY, new int[] {topLeft[0], topLeft[1] + 1}, new int[] {botRight[0] - 1, botRight[1]});
+
+				System.out.println("in bot left, top left=" + topLeft[0] + "," + topLeft[1] + ", bot right=" + botRight[0] + ", " + botRight[1]);
+			}
+		} else {
+			// now check for door position, take the chunk from the bigger side
+			if (room.getExitCoords()[1] > (room.getHeight() / 2)) {
+				// take top right
+				int[] topLeft = { rand.nextInt(room.getWidth() - 3) + 2, 0 };
+				int[] botRight = { room.getWidth(),
+						(room.getExitCoords()[1] - 1 - rand.nextInt(room.getExitCoords()[1] - 2)) };
+				// draw walls
+				addTileTypeToArea(room, TileType.WALL, topLeft, botRight);
+				addTileTypeToArea(room, TileType.EMPTY, new int[] { topLeft[0] + 1, topLeft[1] }, new int[] { botRight[0], botRight[1] - 1 });
+
+				System.out.println("in top right, top left=" + topLeft[0] + "," + topLeft[1] + ", bot right="
+						+ botRight[0] + ", " + botRight[1]);
+			} else {
+				// take bot right
+				int[] topLeft = { rand.nextInt(room.getWidth() - 3) + 2,
+						(room.getHeight() - rand.nextInt(room.getHeight() - room.getExitCoords()[1] - 2) - 2) };
+				int[] botRight = { room.getWidth(), room.getHeight() };
+				// draw walls
+				addTileTypeToArea(room, TileType.WALL, topLeft, botRight);
+				addTileTypeToArea(room, TileType.EMPTY, new int[] { topLeft[0] + 1, topLeft[1] + 1 },
+						botRight);
+
+				System.out.println("in bot right, top left=" + topLeft[0] + "," + topLeft[1] + ", bot right="
+						+ botRight[0] + ", " + botRight[1]);
+			}
+		}
+	}
+
+	private Room getRandomChunkedRoom() {
+		// get a large room
+		int minRoomSpan = 7;
+		int roomHeight = rand.nextInt(7) + minRoomSpan;
+		int roomWidth = rand.nextInt(7) + minRoomSpan;
+		int entranceRow = rand.nextInt(roomHeight - 2) + 1;
+		int exitRow = rand.nextInt(roomHeight - 2) + 1;
+		Room room = getNewBasicRoom(roomHeight, roomWidth, entranceRow, exitRow);
+		// add the pillar
+		// min width of pillar is 3 tiles
+		// min top position is (2, 2)
+		int[] topLeft = { rand.nextInt(roomWidth - 6) + 2, rand.nextInt(roomHeight - 6) + 2 };
+		int[] size = { rand.nextInt(roomWidth - topLeft[0] - 4) + 3, rand.nextInt(roomHeight - topLeft[1] - 4) + 3 };
+		addPillarToRoom(room, topLeft, size);
+		removeCornerFromRoom(room);
+		return room;
+	}
+
+	/**
+	 * use this for adding a rectangular area (or line) of a given tile type to a room
+	 * @param room
+	 * @param type
+	 * @param topLeft
+	 * @param botRight
+	 */
+	private void addTileTypeToArea(Room room, TileType type, int[] topLeft, int[] botRight) {
+		for (int i = 0; i < botRight[0] - topLeft[0]; i++) {
+			for (int j = 0; j < botRight[1] - topLeft[1]; j++) {
+				room.setTileAtCoords(new Tile(type), topLeft[0] + i, topLeft[1] + j);
 			}
 		}
 	}
