@@ -99,6 +99,8 @@ public class AsciiRenderer {
 			return 's';
 		case COW:
 			return 'c';
+		case CLOWN:
+			return '&';
 		default:
 			return 'e';
 		}

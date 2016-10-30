@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import game.agents.actors.Actor;
+import game.agents.actors.enemies.Clown;
 import game.agents.actors.enemies.Cow;
 import game.agents.actors.enemies.Sheep;
 import game.engine.board.Room;
@@ -34,6 +35,7 @@ public class ActorFactory {
 		// for now just place a single sheep in each room :)
 		actors.add(new Sheep(coords.get(rand.nextInt(coords.size())), roomNumber));
 		actors.add(new Cow(coords.get(rand.nextInt(coords.size())), roomNumber));
+		actors.add(new Clown(coords.get(rand.nextInt(coords.size())), roomNumber));
 		return actors;
 	}
 }

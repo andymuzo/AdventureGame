@@ -6,5 +6,5 @@ package game.agents.actors;
  *
  */
 public enum ActorID {
-	SHEEP, COW
+	SHEEP, COW, CLOWN, RABBIT
 }
