@@ -57,7 +57,7 @@ public class Room {
 		// remember, outer list is y coords, inner list is x coords
 		return tiles.get(y).get(x);
 	}
-	
+
 	public Tile getTileAtCoords(int[] coords) {
 		// remember, outer list is y coords, inner list is x coords
 		return tiles.get(coords[1]).get(coords[0]);
@@ -65,6 +65,17 @@ public class Room {
 
 	public void setTileAtCoords(Tile tile, int x, int y) {
 		tiles.get(y).set(x, tile);
+	}
+
+	/**
+	 * This takes care of the collision detection for walls and other impassable
+	 * Tiles.
+	 * @param xPos x coordinate for testing
+	 * @param yPos y coordinate for testing
+	 * @return
+	 */
+	public boolean isTileAtCoordsPassable(int coords[]) {
+		return isTileAtCoordsPassable(coords[0], coords[1]);
 	}
 
 	/**
@@ -93,7 +104,7 @@ public class Room {
 	public int[] getEntranceCoords() {
 		return entranceCoords;
 	}
-	
+
 	public List<int[]> getEmptyFloorTileCoords() {
 		List<int[]> coords = new ArrayList<>();
 		for (int i = 0; i < tiles.size(); i++) {

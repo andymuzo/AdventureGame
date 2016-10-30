@@ -1,24 +1,15 @@
 package game.agents.actors.AI;
 
-import java.util.Random;
-
 import game.GUI.Action;
 import game.agents.actors.Actor;
+import game.engine.board.BoardTools;
 import game.engine.board.GameBoard;
 import game.engine.board.TileType;
 
-public class WanderingAimlessly implements AI {
-	Random rand;
-
-	public WanderingAimlessly() {
-		rand = new Random(System.currentTimeMillis());
-	}
+public class ApproachPlayer implements AI {
 
 	@Override
 	public void update(Actor actor, GameBoard gameBoard) {
-		// this AI just chooses a random direction and moves that way
-		// if it can. If it can't it just waits.
-
 		// keep it in the one room
 		TileType type = gameBoard.getRoom(actor.getRoomNumber()).getTileAtCoords(actor.getCoords()).getTileType();
 		if (type == TileType.ENTRANCE_DOOR) {
@@ -27,22 +18,11 @@ public class WanderingAimlessly implements AI {
 			doAction(actor, gameBoard, Action.LEFT);
 		}
 
-		switch (rand.nextInt(4)) {
-		case 0:
-			doAction(actor, gameBoard, Action.UP);
-			break;
-		case 1:
-			doAction(actor, gameBoard, Action.DOWN);
-			break;
-		case 2:
-			doAction(actor, gameBoard, Action.LEFT);
-			break;
-		case 3:
-			doAction(actor, gameBoard, Action.RIGHT);
-			break;
-		default:
-			break;
-		}
+		// use the board tools to work out the direction to the player
+		BoardTools tools = gameBoard.getTools();
+		doAction(actor,
+				gameBoard,
+				tools.getDirectionFromAtoB(actor.getCoords(), gameBoard.getPlayer().getCoords()));
 	}
 
 	/**
@@ -88,4 +68,5 @@ public class WanderingAimlessly implements AI {
 
 		return isSuccessful; // returns true if the action was possible
 	}
+
 }

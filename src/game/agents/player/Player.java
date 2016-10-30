@@ -11,8 +11,7 @@ import game.engine.board.TileType;
  *
  */
 public class Player {
-	private int xPos;
-	private int yPos;
+	private int[] coords;
 	private int roomPos;
 	private int level;
 
@@ -23,26 +22,29 @@ public class Player {
 	 * @param roomPos
 	 */
 	public Player(int xPos, int yPos, int roomPos, int level) {
-		this.setXPos(xPos);
-		this.setYPos(yPos);
+		this.coords = new int[] {xPos, yPos};
 		this.setRoomPos(roomPos);
 		this.setLevel(level);
 	}
 
+	public int[] getCoords() {
+		return coords;
+	}
+
 	public int getXPos() {
-		return xPos;
+		return coords[0];
 	}
 
 	public void setXPos(int xPos) {
-		this.xPos = xPos;
+		this.coords[0] = xPos;
 	}
 
 	public int getYPos() {
-		return yPos;
+		return coords[1];
 	}
 
 	public void setYPos(int yPos) {
-		this.yPos = yPos;
+		this.coords[1] = yPos;
 	}
 
 	public int getRoomPos() {
@@ -125,7 +127,7 @@ public class Player {
 	 * @return
 	 */
 	private boolean canMoveUp(GameBoard gameBoard) {
-		return gameBoard.getPlayerRoom().isTileAtCoordsPassable(xPos, yPos - 1);
+		return gameBoard.getPlayerRoom().isTileAtCoordsPassable(coords[0], coords[1] - 1);
 	}
 
 	/**
@@ -134,7 +136,7 @@ public class Player {
 	 * @return
 	 */
 	private boolean canMoveDown(GameBoard gameBoard) {
-		return gameBoard.getPlayerRoom().isTileAtCoordsPassable(xPos, yPos + 1);
+		return gameBoard.getPlayerRoom().isTileAtCoordsPassable(coords[0], coords[1] + 1);
 	}
 
 	/**
@@ -144,12 +146,12 @@ public class Player {
 	 */
 	private boolean canMoveLeft(GameBoard gameBoard) {
 		// this must include moving to the previous room
-		if (gameBoard.getPlayerRoom().getTileAtCoords(xPos, yPos).getTileType() == TileType.ENTRANCE_DOOR) {
+		if (gameBoard.getPlayerRoom().getTileAtCoords(coords[0], coords[1]).getTileType() == TileType.ENTRANCE_DOOR) {
 			// must be in a doorway
 			return true;
 		} else {
 			// if not then check for movement in room
-			return gameBoard.getPlayerRoom().isTileAtCoordsPassable(xPos - 1, yPos);
+			return gameBoard.getPlayerRoom().isTileAtCoordsPassable(coords[0] - 1, coords[1]);
 		}
 	}
 
@@ -160,11 +162,11 @@ public class Player {
 	 */
 	private boolean canMoveRight(GameBoard gameBoard) {
 		// this must include moving to the next room
-		if (gameBoard.getPlayerRoom().getTileAtCoords(xPos, yPos).getTileType() == TileType.EXIT_DOOR) {
+		if (gameBoard.getPlayerRoom().getTileAtCoords(coords[0], coords[1]).getTileType() == TileType.EXIT_DOOR) {
 			// must be in a doorway
 			return true;
 		} else {
-			return gameBoard.getPlayerRoom().isTileAtCoordsPassable(xPos + 1, yPos);
+			return gameBoard.getPlayerRoom().isTileAtCoordsPassable(coords[0] + 1, coords[1]);
 		}
 	}
 
@@ -175,7 +177,7 @@ public class Player {
 	private boolean moveUp(GameBoard gameBoard) {
 		// up is negative y
 		if (canMoveUp(gameBoard)) {
-			yPos--;
+			coords[1]--;
 			return true;
 		} else return false;
 	}
@@ -187,7 +189,7 @@ public class Player {
 	private boolean moveDown(GameBoard gameBoard) {
 		// down is positive y
 		if (canMoveDown(gameBoard)) {
-			yPos++;
+			coords[1]++;
 			return true;
 		} else return false;
 	}
@@ -200,11 +202,11 @@ public class Player {
 		// left is negative x
 		if (canMoveLeft(gameBoard)) {
 			// check to see if need to move to the previous room
-			if (gameBoard.getPlayerRoom().getTileAtCoords(xPos, yPos).getTileType() == TileType.ENTRANCE_DOOR) {
+			if (gameBoard.getPlayerRoom().getTileAtCoords(coords[0], coords[1]).getTileType() == TileType.ENTRANCE_DOOR) {
 				// must be in a doorway
 				return moveToPreviousRoom(gameBoard);
 			} else {
-				xPos--;
+				coords[0]--;
 				return true;
 			}
 		} else return false;
@@ -217,11 +219,11 @@ public class Player {
 	private boolean moveRight(GameBoard gameBoard) {
 		// right is positive x
 		if (canMoveRight(gameBoard)) {
-			if (gameBoard.getPlayerRoom().getTileAtCoords(xPos, yPos).getTileType() == TileType.EXIT_DOOR) {
+			if (gameBoard.getPlayerRoom().getTileAtCoords(coords[0], coords[1]).getTileType() == TileType.EXIT_DOOR) {
 				// must be in a doorway
 				return moveToNextRoom(gameBoard);
 			} else {
-				xPos++;
+				coords[0]++;
 				return true;
 			}
 		} else return false;
@@ -238,8 +240,8 @@ public class Player {
 			// not in starting room
 			roomPos--;
 			int[] exitCoords = gameBoard.getPlayerRoom().getExitCoords();
-			xPos = exitCoords[0];
-			yPos = exitCoords[1];
+			coords[0] = exitCoords[0];
+			coords[1] = exitCoords[1];
 			return true;
 		} else return false;
 	}
@@ -255,8 +257,8 @@ public class Player {
 		gameBoard.createNextRoom();
 
 		int[] entranceCoords = gameBoard.getPlayerRoom().getEntranceCoords();
-		xPos = entranceCoords[0];
-		yPos = entranceCoords[1];
+		coords[0] = entranceCoords[0];
+		coords[1] = entranceCoords[1];
 		return true;
 	}
 

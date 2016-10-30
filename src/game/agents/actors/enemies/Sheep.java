@@ -7,14 +7,14 @@ import game.agents.actors.AI.WanderingAimlessly;
 import game.engine.board.GameBoard;
 
 public class Sheep implements Actor {
-	
+
 	int[] coords;
 	int roomNumber;
 	int health;
 	AI ai;
 	ActorID actorID;
 	int actorLevel;
-	
+
 	public Sheep(int[] coords, int roomNumber) {
 		// set at the start
 		this.coords = coords;
@@ -25,13 +25,13 @@ public class Sheep implements Actor {
 		actorLevel = 0; // negative for friendly combat unit, 0 for neutral, 1 for easy
 		ai = new WanderingAimlessly();
 	}
-	
+
 	@Override
 	public void update(GameBoard gameBoard) {
 		/**
 		 *  here is where you would change between different states by writing:
 		 *  ai = new SomeAIStateClass();
-		 *  
+		 *
 		 *  In this case we just want it to wander aimlessly so it's fine to leave
 		 *  it as a single state.
 		 */
@@ -43,9 +43,9 @@ public class Sheep implements Actor {
 		// This is where we will eventually apply armour and attack types etc.
 		// blank for now until we implement combat
 	}
-	
+
 	// The following will be the same in every Actor **********************************
-	
+
 	@Override
 	public int getActorLevel() {
 		return actorLevel;

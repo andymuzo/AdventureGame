@@ -20,6 +20,7 @@ public class GameBoard {
 	private Player player;
 	private BoardFactory factory;
 	List<Actor> actors;
+	BoardTools tools;
 
 	/**
 	 * use this constructor for putting a List of rooms into the gameboard
@@ -31,6 +32,7 @@ public class GameBoard {
 		this.setRooms(rooms);
 		this.setPlayer(player);
 		this.actors = new ArrayList<Actor>();
+		this.tools = new BoardTools();
 	}
 
 	public void createNextRoom() {
@@ -40,6 +42,10 @@ public class GameBoard {
 		}
 	}
 
+	public BoardTools getTools() {
+		return tools;
+	}
+
 	public List<Room> getRooms() {
 		return rooms;
 	}
@@ -47,7 +53,7 @@ public class GameBoard {
 	public Room getPlayerRoom() {
 		return rooms.get(player.getRoomPos());
 	}
-	
+
 	public Room getRoom(int roomNumber) {
 		return rooms.get(roomNumber);
 	}
@@ -63,7 +69,7 @@ public class GameBoard {
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
-	
+
 	public void addActors(List<Actor> newActors) {
 		actors.addAll(newActors);
 	}
@@ -77,12 +83,44 @@ public class GameBoard {
 		for (Actor actor : actors) {
 			if (actor.getRoomNumber() == player.getRoomPos()) {
 				actor.update(this);
+				gui.update(this);
 			}
 		}
 	}
-	
+
 	public List<Actor> getActors() {
 		return actors;
+	}
+
+	/**
+	 * checks to see if there is the player or an actor in a certain location
+	 * @param coords
+	 * @param roomNumber
+	 * @return
+	 */
+	public boolean isCoordsOccupied(int[] coords, int roomNumber) {
+		boolean isEmpty = true;
+		if (player.getRoomPos() == roomNumber && tools.areCoordsEqual(player.getCoords(), coords)) {
+			isEmpty = false; // player is there
+		} else {
+			for (Actor actor : actors) {
+				if (actor.getRoomNumber() == roomNumber && tools.areCoordsEqual(actor.getCoords(), coords)) {
+					isEmpty = false;
+				}
+			}
+		}
+		return isEmpty;
+	}
+
+	/**
+	 * true if there are no tile or actors at the coords that can't be occupied by an actor
+	 * @param coords
+	 * @return
+	 */
+	public boolean isCoordsPassable(int[] coords, int room) {
+		boolean isPassable = getRoom(room).isTileAtCoordsPassable(coords);
+		boolean isOccupied = !isCoordsOccupied(coords, room);
+		return isPassable && !isOccupied;
 	}
 
 }

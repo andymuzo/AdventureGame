@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import game.agents.actors.Actor;
 import game.agents.player.Player;
 import game.engine.board.GameBoard;
 import game.engine.board.Room;
