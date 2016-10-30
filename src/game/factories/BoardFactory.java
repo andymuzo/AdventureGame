@@ -63,7 +63,6 @@ public class BoardFactory {
 		int level = gameBoard.getPlayer().getLevel();
 		int roomNumber = gameBoard.getRooms().size() - 1;
 		gameBoard.addActors(actorFactory.getActorsForRoom(room, level, roomNumber));
-		System.out.println("added sheep to room number " + roomNumber);
 	}
 
 	//******************************************************************

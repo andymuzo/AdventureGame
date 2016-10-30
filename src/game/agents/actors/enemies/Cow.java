@@ -7,7 +7,7 @@ import game.agents.actors.AI.ApproachPlayer;
 import game.agents.actors.AI.WanderingAimlessly;
 import game.engine.board.GameBoard;
 
-public class Sheep implements Actor {
+public class Cow implements Actor {
 
 	int[] coords;
 	int roomNumber;
@@ -16,33 +16,30 @@ public class Sheep implements Actor {
 	ActorID actorID;
 	int actorLevel;
 
-	public Sheep(int[] coords, int roomNumber) {
+	public Cow(int[] coords, int roomNumber) {
 		// set at the start
 		this.coords = coords;
 		this.roomNumber = roomNumber;
 		// Set these depending on the actor created
 		health = 1;
-		actorID = ActorID.SHEEP;
+		actorID = ActorID.COW;
 		actorLevel = 0; // negative for friendly combat unit, 0 for neutral, 1 for easy
-		ai = new WanderingAimlessly();
+		ai = new ApproachPlayer();
 	}
+
 
 	@Override
 	public void update(GameBoard gameBoard) {
-		/**
-		 *  here is where you would change between different states by writing:
-		 *  ai = new SomeAIStateClass();
-		 *
-		 *  In this case we just want it to wander aimlessly so it's fine to leave
-		 *  it as a single state.
-		 */
+		if (gameBoard.getTools().getDistanceBetweenCoords(coords, gameBoard.getPlayer().getCoords()) < 2) {
+			ai = new WanderingAimlessly();
+		}
 		ai.update(this, gameBoard);
 	}
 
 	@Override
 	public void hit() {
-		// This is where we will eventually apply armour and attack types etc.
-		// blank for now until we implement combat
+		// TODO Auto-generated method stub
+
 	}
 
 	// The following will be the same in every Actor **********************************

@@ -37,7 +37,7 @@ public class GameBoard {
 
 	public void createNextRoom() {
 		// check to see if we need to first
-		if (player.getRoomPos() > rooms.size() - 2) {
+		if (player.getRoomNumber() > rooms.size() - 2) {
 			factory.addNewRoom(this);
 		}
 	}
@@ -51,7 +51,7 @@ public class GameBoard {
 	}
 
 	public Room getPlayerRoom() {
-		return rooms.get(player.getRoomPos());
+		return rooms.get(player.getRoomNumber());
 	}
 
 	public Room getRoom(int roomNumber) {
@@ -81,7 +81,7 @@ public class GameBoard {
 	public void updateActors(GUI gui) {
 		// for now just update actors in the player's room!
 		for (Actor actor : actors) {
-			if (actor.getRoomNumber() == player.getRoomPos()) {
+			if (actor.getRoomNumber() == player.getRoomNumber()) {
 				actor.update(this);
 				gui.update(this);
 			}
@@ -100,7 +100,7 @@ public class GameBoard {
 	 */
 	public boolean isCoordsOccupied(int[] coords, int roomNumber) {
 		boolean isEmpty = true;
-		if (player.getRoomPos() == roomNumber && tools.areCoordsEqual(player.getCoords(), coords)) {
+		if (player.getRoomNumber() == roomNumber && tools.areCoordsEqual(player.getCoords(), coords)) {
 			isEmpty = false; // player is there
 		} else {
 			for (Actor actor : actors) {

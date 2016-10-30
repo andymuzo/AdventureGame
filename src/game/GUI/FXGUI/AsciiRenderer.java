@@ -62,7 +62,7 @@ public class AsciiRenderer {
 		// draw items
 
 		drawActors(asciiRoom, gameBoard);
-		
+
 		// draw player
 		asciiRoom[gameBoard.getPlayer().getXPos()][gameBoard.getPlayer().getYPos()] = '@';
 
@@ -83,20 +83,22 @@ public class AsciiRenderer {
 	    }
 	    return builder.toString();
 	}
-	
+
 	private void drawActors(char[][] asciiRoom, GameBoard gameBoard) {
 		for (Actor actor : gameBoard.getActors()) {
-			if (actor.getRoomNumber() == gameBoard.getPlayer().getRoomPos()) {
+			if (actor.getRoomNumber() == gameBoard.getPlayer().getRoomNumber()) {
 				// draw it!
 				asciiRoom[actor.getCoords()[0]][actor.getCoords()[1]] = getActorChar(actor.getActorID());
 			}
 		}
 	}
-	
+
 	private char getActorChar(ActorID actorID) {
 		switch (actorID) {
 		case SHEEP:
 			return 's';
+		case COW:
+			return 'c';
 		default:
 			return 'e';
 		}

@@ -95,6 +95,10 @@ public class FXGUI extends Application implements GUI {
     	});
     }
 
+    /**
+     * this is the main game loop! Call it to run each frame of the game
+     * @param action
+     */
     private void runAction(Action action) {
     	if (gameEngine.isActionPossible(action)) {
     		// perform the action

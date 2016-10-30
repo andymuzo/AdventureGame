@@ -105,6 +105,10 @@ public class Room {
 		return entranceCoords;
 	}
 
+	/**
+	 * returns a list of coordinates of floor tiles in the room
+	 * @return
+	 */
 	public List<int[]> getEmptyFloorTileCoords() {
 		List<int[]> coords = new ArrayList<>();
 		for (int i = 0; i < tiles.size(); i++) {

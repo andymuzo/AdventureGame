@@ -47,7 +47,7 @@ public class Player {
 		this.coords[1] = yPos;
 	}
 
-	public int getRoomPos() {
+	public int getRoomNumber() {
 		return roomPos;
 	}
 
@@ -236,7 +236,7 @@ public class Player {
 	 * @return
 	 */
 	private boolean moveToPreviousRoom(GameBoard gameBoard) {
-		if (getRoomPos() != 0) {
+		if (getRoomNumber() != 0) {
 			// not in starting room
 			roomPos--;
 			int[] exitCoords = gameBoard.getPlayerRoom().getExitCoords();
